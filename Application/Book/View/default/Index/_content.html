@@ -1,0 +1,57 @@
+<div class="content-top">
+    <div class="top clearfix">
+        <h1>{$book_section.title}</h1>
+        <div class="copy-link">
+            <a data-role="copy_book_link" book-link="{:U('Book/Index/read',array('id'=>$book_id,'section_id'=>$section_id),true,true)}"><i class="icon icon-copy"></i>{:L("_COPY_THIS_PAGE_LINK_")}</a>
+        </div>
+        <if condition="$book_section['type']&&check_auth('Book/index/editSection')">
+            <a class="pull-right" href="{:U('Book/Index/editSection',array('section_id'=>$section_id))}" style="margin-top: 15px;"><i class="icon-edit"></i>{:L("_EDIT_")}</a>
+        </if>
+
+    </div>
+    <div class="line"></div>
+</div>
+<div class="content-content">
+    <div style="width: 100%;text-align: right"><i class="icon-eye-open"></i> {$book_section.see}</div>
+    <notempty name="book_section.keywords">
+        <div class="keywords">
+          {:L("_KEY_WORD_WITH_SPACE_")}{$book_section.keywords}
+        </div>
+    </notempty>
+    <notempty name="book_section.summary">
+        <div class="summary">
+            <blockquote>
+                <p>{:L("_INTRODUCTION_WITH_COLON_")}{$book_section.summary}</p>
+            </blockquote>
+        </div>
+    </notempty>
+    <notempty name="book_section.content">
+        <div class="content" style="margin-top: 15px;">
+            {$book_section.content}
+        </div>
+    </notempty>
+</div>
+<style>
+    .zclip{
+        top:24px!important;
+    }
+</style>
+<script>
+    $(function(){
+        $('[data-role="copy_book_link"]').zclip({
+            copy: function () {
+                return $(this).attr('book-link');
+            },
+            afterCopy: function () {
+                toast.success({:L('_COPY_SUCCESS_WITH_SINGLE_')});
+            }
+        });
+    });
+    $(function () {
+        var interval=setInterval(function(){
+            uParse('#book-content');
+            clearInterval(interval);
+        },100)
+
+    })
+</script>

@@ -1,0 +1,60 @@
+<extend name="Base/common"/>
+<block name="style">
+    <link href="__CSS__/book.css" type="text/css" rel="stylesheet">
+</block>
+<block name="header">
+    <include file="Public/nav"/>
+</block>
+<block name="body">
+    <div class="col-xs-12 bookList" style="min-height: 500px;">
+        <volist name="bookList" id="category">
+            <div class="type-block common-block clearfix" style="margin-bottom: 20px;">
+                <div class="type-title ">
+                    {$category.title}
+                </div>
+                <ul>
+                    <volist name="category.books" id="book_info">
+                        <li class="col-xs-2 one-book">
+                            <php>
+                                $can_read=check_read_auth($book_info['role_ids']);
+                                if($can_read===0){
+                                $tip_info=get_role_info($book_info['role_ids']);
+                            </php>
+                            <a href="javascript:void(0);" onclick="toast.error('{:L("_ONLY_")}{$tip_info}{:L("_AND_SO_ON_THE_IDENTITY_TO_HAVE_THE_READING_THIS_DOCUMENT_AUTHORITY_WITH_EXCLAMATION_")}');">
+                                <php>}else{</php>
+                                <a href="{:U('Book/Index/read',array('id'=>$book_info['id']))}">
+                                    <php>}</php>
+                                    <dl>
+                                        <dt>
+                                            <php>if($can_read===1){</php>
+                                        <div class="lock-img"><img src="__IMG__/unlock.png"/></div>
+                                        <php>}elseif($can_read==0){</php>
+                                        <div class="lock-img"><img src="__IMG__/lock.png"/></div>
+                                        <php>}</php>
+                                        <eq name="book_info['img']" value="0">
+                                            <div class="book-cover" style="margin-left: 11px;">
+                                                <div>
+                                                    {$book_info.title}
+                                                </div>
+                                            </div>
+                                            <else/>
+                                            <img src="{$book_info.img|getThumbImageById=150,212}" class="book-cover">
+                                        </eq>
+                                        </dt>
+                                        <dd>
+                                            <div class="title text-more" title="{$book_info.title}">{$book_info.title}</div>
+                                        </dd>
+                                    </dl>
+                                </a>
+                        </li>
+                    </volist>
+                </ul>
+            </div>
+        </volist>
+        <empty name="bookList">
+            <p style="width: 100%;text-align: center;font-size: 35px;color: #CBCBCB;padding: 100px 0;">
+               {:L("_CAN_NOT_READ_THE_DOCUMENT_YO_WITH_SPACE_")}~^~
+            </p>
+        </empty>
+    </div>
+</block>
